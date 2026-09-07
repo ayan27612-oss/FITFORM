@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>FITFORM • Personalized Fitness</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#070808;
+  --card:#111313;
+  --card2:#171919;
+  --line:#282b2b;
+  --text:#f5f5f3;
+  --muted:#858989;
+  --soft:#b8bbbb;
+  --accent:#d9ffb8;
+  --accent2:#b8f5ff;
+}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
+  overflow:hidden;
+}
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+/* ================= APP ================= */
+
+.app{
+  width:100%;
+  height:100svh;
+  overflow:hidden;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 0%,#161b17 0%,#090a0a 38%,#070808 75%);
+}
+
+/* ================= TOP ================= */
+
+.topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:62px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
+  z-index:10;
+}
+
+.logo{
+  font-size:16px;
+  font-weight:850;
+  letter-spacing:.2em;
+}
+
+.step{
+  color:#6f7474;
+  font-size:10px;
+  font-weight:700;
+}
+
+/* ================= PROGRESS ================= */
+
+.progress{
+  position:absolute;
+  top:61px;
+  left:18px;
+  right:18px;
+  height:2px;
+  background:#202323;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:var(--accent);
+  transition:width .5s cubic-bezier(.22,.75,.2,1);
+}
+
+/* ================= SCREENS ================= */
+
+.screen{
+  position:absolute;
+  inset:0;
+  padding:
+    105px
+    20px
+    88px;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+
+  opacity:0;
+  transform:translateX(35px);
+  pointer-events:none;
+
+  transition:
+    opacity .35s ease,
+    transform .45s cubic-bezier(.22,.75,.2,1);
+}
+
+.screen.active{
+  opacity:1;
+  transform:translateX(0);
+  pointer-events:auto;
+}
+
+.screen.exit{
+  opacity:0;
+  transform:translateX(-35px);
+}
+
+/* ================= INTRO ================= */
+
+.intro{
+  text-align:center;
+  align-items:center;
+}
+
+.intro-mark{
+  width:78px;
+  height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:25px;
+  border:1px solid #343936;
+  border-radius:24px;
+  background:
+    linear-gradient(145deg,#20271f,#0f120f);
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.intro-mark span{
+  font-size:31px;
+  color:var(--accent);
+}
+
+.eyebrow{
+  margin-bottom:9px;
+  color:#858b87;
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+h1{
+  max-width:600px;
+  margin:0;
+  font-size:clamp(34px,9vw,62px);
+  line-height:.98;
+  letter-spacing:-.055em;
+}
+
+.subtitle{
+  max-width:430px;
+  margin:17px auto 0;
+  color:#858989;
+  font-size:13px;
+  line-height:1.6;
+}
+
+/* ================= QUESTIONS ================= */
+
+.question{
+  width:min(620px,100%);
+  margin:auto;
+}
+
+.question-number{
+  margin-bottom:10px;
+  color:var(--accent);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.14em;
+}
+
+.question h2{
+  margin:0;
+  max-width:600px;
+  font-size:clamp(27px,7vw,45px);
+  line-height:1.02;
+  letter-spacing:-.045em;
+}
+
+.question-desc{
+  margin:11px 0 20px;
+  color:#777c7c;
+  font-size:12px;
+  line-height:1.5;
+}
+
+/* ================= OPTIONS ================= */
+
+.options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.option{
+  position:relative;
+  min-height:58px;
+  padding:13px;
+  text-align:left;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:
+    linear-gradient(145deg,#151818,#101212);
+  color:#d9dddd;
+  transition:
+    transform .2s ease,
+    border-color .2s ease,
+    background .2s ease;
+}
+
+.option:active{
+  transform:scale(.975);
+}
+
+.option.selected{
+  border-color:#91a981;
+  background:
+    linear-gradient(145deg,#1a2119,#121612);
+  box-shadow:0 0 0 1px rgba(217,255,184,.08);
+}
+
+.option-title{
+  font-size:12px;
+  font-weight:750;
+}
+
+.option-desc{
+  margin-top:4px;
+  color:#707575;
+  font-size:9px;
+  line-height:1.3;
+}
+
+.option.selected .option-desc{
+  color:#89938a;
+}
+
+.check{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:15px;
+  height:15px;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:var(--accent);
+  color:#0b0d0b;
+  font-size:9px;
+  font-weight:900;
+}
+
+.option.selected .check{
+  display:flex;
+}
+
+/* ================= INPUTS ================= */
+
+.input-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.input-group label{
+  display:block;
+  margin:0 0 5px 2px;
+  color:#747979;
+  font-size:9px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.input{
+  width:100%;
+  height:48px;
+  padding:0 13px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  outline:none;
+  background:#0d0f0f;
+  color:white;
+  font-size:14px;
+}
+
+.input:focus{
+  border-color:#59605b;
+}
+
+/* ================= RANGE ================= */
+
+.range-box{
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#101212;
+}
+
+.range-top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:13px;
+}
+
+.range-value{
+  font-size:20px;
+  font-weight:800;
+}
+
+input[type="range"]{
+  width:100%;
+  accent-color:var(--accent);
+}
+
+/* ================= NAV ================= */
+
+.nav{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:76px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:9px;
+  padding:0 18px 12px;
+  z-index:20;
+  background:
+    linear-gradient(transparent,#070808 35%);
+}
+
+.back{
+  width:48px;
+  height:44px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#101212;
+  color:#999f9f;
+  font-size:17px;
+}
+
+.next{
+  flex:1;
+  height:44px;
+  border:0;
+  border-radius:11px;
+  background:#edf2eb;
+  color:#080a08;
+  font-size:11px;
+  font-weight:850;
+  letter-spacing:.04em;
+}
+
+.next:active,
+.back:active{
+  transform:scale(.98);
+}
+
+/* ================= SUMMARY ================= */
+
+.summary{
+  width:min(650px,100%);
+  margin:auto;
+}
+
+.summary-title{
+  margin-bottom:5px;
+  color:#7c827e;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+
+.summary h2{
+  margin:0 0 16px;
+  font-size:36px;
+  line-height:1;
+  letter-spacing:-.05em;
+}
+
+.summary-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+
+.summary-card{
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#101212;
+}
+
+.summary-card small{
+  color:#686e6e;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+.summary-card strong{
+  display:block;
+  margin-top:5px;
+  font-size:13px;
+}
+
+.ready{
+  margin-top:10px;
+  padding:14px;
+  border:1px solid #394437;
+  border-radius:12px;
+  background:#121812;
+  color:#b9c6b8;
+  font-size:11px;
+  line-height:1.45;
+}
+
+/* ================= DESKTOP ================= */
+
+@media(min-width:700px){
+
+  .topbar{
+    height:72px;
+    padding:0 32px;
+  }
+
+  .progress{
+    top:71px;
+    left:32px;
+    right:32px;
+  }
+
+  .screen{
+    padding:125px 35px 105px;
+  }
+
+  .nav{
+    height:90px;
+    padding:0 32px 20px;
+  }
+
+  .back{
+    width:54px;
+  }
+
+  .next{
+    max-width:620px;
+  }
+}
+
+/* ================= SHORT PHONE ================= */
+
+@media(max-height:680px){
+
+  .topbar{
+    height:52px;
+  }
+
+  .progress{
+    top:51px;
+  }
+
+  .screen{
+    padding-top:78px;
+    padding-bottom:72px;
+  }
+
+  .question h2{
+    font-size:27px;
+  }
+
+  .question-desc{
+    margin-bottom:12px;
+  }
+
+  .option{
+    min-height:48px;
+    padding:10px;
+  }
+
+  .option-desc{
+    display:none;
+  }
+
+  .input{
+    height:42px;
+  }
+
+  .nav{
+    height:65px;
+    padding-bottom:7px;
+  }
+
+  .next,
+  .back{
+    height:38px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="logo">FITFORM</div>
+    <div class="step" id="stepText">WELCOME</div>
+  </header>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="screen active intro" id="screen0">
+
+    <div class="intro-mark">
+      <span>＋</span>
+    </div>
+
+    <div class="eyebrow">Personal Fitness Planner</div>
+
+    <h1>
+      Your plan.<br>
+      Built around you.
+    </h1>
+
+    <p class="subtitle">
+      Tell us about your goals, body, lifestyle and routine.
+      FITFORM will use your answers to build your starting plan.
+    </p>
+
+  </section>
+
+  <!-- NAME -->
+  <section class="screen" id="screen1">
+    <div class="question">
+
+      <div class="question-number">01 / PROFILE</div>
+
+      <h2>What should we call you?</h2>
+
+      <p class="question-desc">
+        Your name will be used throughout your personal dashboard.
+      </p>
+
+      <input
+        class="input"
+        id="name"
+        type="text"
+        placeholder="Your name"
+        autocomplete="given-name"
+      >
+
+    </div>
+  </section>
+
+  <!-- AGE / GENDER -->
+  <section class="screen" id="screen2">
+    <div class="question">
+
+      <div class="question-number">02 / PROFILE</div>
+
+      <h2>Tell us a little about yourself.</h2>
+
+      <p class="question-desc">
+        These details help create better starting estimates.
+      </p>
+
+      <div class="input-grid">
+
+        <div class="input-group">
+          <label>Age</label>
+          <input
+            class="input"
+            id="age"
+            type="number"
+            inputmode="numeric"
+            placeholder="Age"
+          >
+        </div>
+
+        <div class="input-group">
+          <label>Gender</label>
+
+          <select
+            class="input"
+            id="gender"
+          >
+            <option value="">Select</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Prefer not to say</option>
+          </select>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- HEIGHT WEIGHT -->
+  <section class="screen" id="screen3">
+    <div class="question">
+
+      <div class="question-number">03 / BODY STATS</div>
+
+      <h2>What are your current stats?</h2>
+
+      <p class="question-desc">
+        Use your current measurements, not your target.
+      </p>
+
+      <div class="input-grid">
+
+        <div class="input-group">
+          <label>Height · cm</label>
+          <input
+            class="input"
+            id="height"
+            type="number"
+            inputmode="decimal"
+            placeholder="175"
+          >
+        </div>
+
+        <div class="input-group">
+          <label>Weight · kg</label>
+          <input
+            class="input"
+            id="weight"
+            type="number"
+            inputmode="decimal"
+            placeholder="75"
+          >
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GOAL -->
+  <section class="screen" id="screen4">
+    <div class="question">
+
+      <div class="question-number">04 / GOAL</div>
+
+      <h2>What's your main goal?</h2>
+
+      <p class="question-desc">
+        We'll adapt the rest of your setup around this.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="goal" data-value="Lose Fat">
+          <div class="option-title">Lose Fat</div>
+          <div class="option-desc">Reduce body fat while preserving muscle.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="goal" data-value="Build Muscle">
+          <div class="option-title">Build Muscle</div>
+          <div class="option-desc">Increase muscle and improve physique.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="goal" data-value="Gain Weight">
+          <div class="option-title">Gain Weight</div>
+          <div class="option-desc">Increase body weight with a structured approach.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="goal" data-value="Get Stronger">
+          <div class="option-title">Get Stronger</div>
+          <div class="option-desc">Focus on strength and performance.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="goal" data-value="Improve Fitness">
+          <div class="option-title">Improve Fitness</div>
+          <div class="option-desc">Build endurance, mobility and conditioning.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="goal" data-value="General Health">
+          <div class="option-title">General Health</div>
+          <div class="option-desc">Build a sustainable healthy routine.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- GOAL DETAIL -->
+  <section class="screen" id="screen5">
+    <div class="question">
+
+      <div class="question-number">05 / GOAL DETAILS</div>
+
+      <h2 id="goalQuestion">
+        How much time can you commit?
+      </h2>
+
+      <p class="question-desc" id="goalDescription">
+        Consistency matters more than choosing the most ambitious option.
+      </p>
+
+      <div class="options" id="goalOptions"></div>
+
+    </div>
+  </section>
+
+  <!-- ACTIVITY -->
+  <section class="screen" id="screen6">
+    <div class="question">
+
+      <div class="question-number">06 / ACTIVITY</div>
+
+      <h2>How active are you currently?</h2>
+
+      <p class="question-desc">
+        Think about your normal week, outside of workouts.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="activity" data-value="Mostly sitting">
+          <div class="option-title">Mostly sitting</div>
+          <div class="option-desc">Desk work, studying or little movement.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="activity" data-value="Lightly active">
+          <div class="option-title">Lightly active</div>
+          <div class="option-desc">Some walking and regular movement.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="activity" data-value="Moderately active">
+          <div class="option-title">Moderately active</div>
+          <div class="option-desc">Active lifestyle or regular exercise.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="activity" data-value="Very active">
+          <div class="option-title">Very active</div>
+          <div class="option-desc">Frequent training or physically active lifestyle.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRAINING DAYS -->
+  <section class="screen" id="screen7">
+    <div class="question">
+
+      <div class="question-number">07 / TRAINING</div>
+
+      <h2>How many days can you train?</h2>
+
+      <p class="question-desc">
+        Choose what you can realistically maintain every week.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="trainingDays" data-value="2 days">
+          <div class="option-title">2 days</div>
+          <div class="option-desc">Minimal but consistent.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="trainingDays" data-value="3 days">
+          <div class="option-title">3 days</div>
+          <div class="option-desc">Balanced and sustainable.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="trainingDays" data-value="4 days">
+          <div class="option-title">4 days</div>
+          <div class="option-desc">Great for structured progress.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="trainingDays" data-value="5 days">
+          <div class="option-title">5 days</div>
+          <div class="option-desc">Higher training frequency.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TRAINING LOCATION -->
+  <section class="screen" id="screen8">
+    <div class="question">
+
+      <div class="question-number">08 / TRAINING</div>
+
+      <h2>Where do you train?</h2>
+
+      <p class="question-desc">
+        We'll use this to determine what exercises are practical for you.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="location" data-value="Gym">
+          <div class="option-title">Gym</div>
+          <div class="option-desc">Machines, weights and full equipment.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="location" data-value="Home">
+          <div class="option-title">Home</div>
+          <div class="option-desc">Home equipment or bodyweight.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="location" data-value="Outdoors">
+          <div class="option-title">Outdoors</div>
+          <div class="option-desc">Walking, running and outdoor training.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="location" data-value="Mixed">
+          <div class="option-title">Mixed</div>
+          <div class="option-desc">Combination of different locations.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FITNESS LEVEL -->
+  <section class="screen" id="screen9">
+    <div class="question">
+
+      <div class="question-number">09 / EXPERIENCE</div>
+
+      <h2>What's your fitness experience?</h2>
+
+      <p class="question-desc">
+        Be honest. Starting at the right level makes progression easier.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="experience" data-value="Complete beginner">
+          <div class="option-title">Complete beginner</div>
+          <div class="option-desc">I'm just getting started.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="experience" data-value="Beginner">
+          <div class="option-title">Beginner</div>
+          <div class="option-desc">I have some experience.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="experience" data-value="Intermediate">
+          <div class="option-title">Intermediate</div>
+          <div class="option-desc">I've trained consistently.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="experience" data-value="Advanced">
+          <div class="option-title">Advanced</div>
+          <div class="option-desc">I have substantial training experience.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- DIET -->
+  <section class="screen" id="screen10">
+    <div class="question">
+
+      <div class="question-number">10 / NUTRITION</div>
+
+      <h2>What's your diet preference?</h2>
+
+      <p class="question-desc">
+        Your food plan should fit what you actually eat.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="diet" data-value="Vegetarian">
+          <div class="option-title">Vegetarian</div>
+          <div class="option-desc">No meat or fish.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="diet" data-value="Eggetarian">
+          <div class="option-title">Eggetarian</div>
+          <div class="option-desc">Vegetarian + eggs.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="diet" data-value="Non-vegetarian">
+          <div class="option-title">Non-vegetarian</div>
+          <div class="option-desc">Includes meat/fish.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="diet" data-value="Vegan">
+          <div class="option-title">Vegan</div>
+          <div class="option-desc">Plant-based diet.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MEALS -->
+  <section class="screen" id="screen11">
+    <div class="question">
+
+      <div class="question-number">11 / NUTRITION</div>
+
+      <h2>How many meals do you prefer?</h2>
+
+      <p class="question-desc">
+        We'll structure your food plan around your normal routine.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="meals" data-value="2 meals">
+          <div class="option-title">2 meals</div>
+          <div class="option-desc">Simple schedule.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="meals" data-value="3 meals">
+          <div class="option-title">3 meals</div>
+          <div class="option-desc">Traditional structure.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="meals" data-value="4 meals">
+          <div class="option-title">4 meals</div>
+          <div class="option-desc">More frequent meals.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="meals" data-value="5+ meals">
+          <div class="option-title">5+ meals</div>
+          <div class="option-desc">Frequent smaller meals.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SLEEP -->
+  <section class="screen" id="screen12">
+    <div class="question">
+
+      <div class="question-number">12 / LIFESTYLE</div>
+
+      <h2>How much do you usually sleep?</h2>
+
+      <p class="question-desc">
+        Recovery is part of the plan too.
+      </p>
+
+      <div class="options">
+
+        <button class="option" data-key="sleep" data-value="Less than 5 hours">
+          <div class="option-title">&lt; 5 hours</div>
+          <div class="option-desc">Very limited sleep.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="sleep" data-value="5–6 hours">
+          <div class="option-title">5–6 hours</div>
+          <div class="option-desc">Below ideal recovery.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="sleep" data-value="7–8 hours">
+          <div class="option-title">7–8 hours</div>
+          <div class="option-desc">Solid recovery range.</div>
+          <span class="check">✓</span>
+        </button>
+
+        <button class="option" data-key="sleep" data-value="9+ hours">
+          <div class="option-title">9+ hours</div>
+          <div class="option-desc">Long sleep duration.</div>
+          <span class="check">✓</span>
+        </button>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SUMMARY -->
+  <section class="screen" id="screen13">
+
+    <div class="summary">
+
+      <div class="summary-title">Profile complete</div>
+
+      <h2 id="summaryName">Your plan is ready.</h2>
+
+      <div class="summary-grid">
+
+        <div class="summary-card">
+          <small>Goal</small>
+          <strong id="summaryGoal">—</strong>
+        </div>
+
+        <div class="summary-card">
+          <small>Current weight</small>
+          <strong id="summaryWeight">—</strong>
+        </div>
+
+        <div class="summary-card">
+          <small>Training</small>
+          <strong id="summaryTraining">—</strong>
+        </div>
+
+        <div class="summary-card">
+          <small>Location</small>
+          <strong id="summaryLocation">—</strong>
+        </div>
+
+        <div class="summary-card">
+          <small>Experience</small>
+          <strong id="summaryExperience">—</strong>
+        </div>
+
+        <div class="summary-card">
+          <small>Diet</small>
+          <strong id="summaryDiet">—</strong>
+        </div>
+
+      </div>
+
+      <div class="ready">
+        Your answers have been saved. The next version will use this
+        profile to generate your personalized workout, nutrition and
+        activity plan.
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+
+    <button
+      class="back"
+      id="backBtn"
+      onclick="previousScreen()"
+    >
+      ‹
+    </button>
+
+    <button
+      class="next"
+      id="nextBtn"
+      onclick="nextScreen()"
+    >
+      GET STARTED
+    </button>
+
+  </nav>
+
+</div>
+
+<script>
+
+/* =========================================================
+   FITFORM V1
+========================================================= */
+
+const TOTAL_SCREENS = 14;
+
+let current = 0;
+
+let data = {
+  name:"",
+  age:"",
+  gender:"",
+  height:"",
+  weight:"",
+  goal:"",
+  goalDetail:"",
+  activity:"",
+  trainingDays:"",
+  location:"",
+  experience:"",
+  diet:"",
+  meals:"",
+  sleep:""
+};
+
+/* ================= LOAD ================= */
+
+const saved =
+  localStorage.getItem("fitform_profile");
+
+if(saved){
+
+  try{
+    data = {
+      ...data,
+      ...JSON.parse(saved)
+    };
+  }catch(e){}
+}
+
+/* ================= ELEMENTS ================= */
+
+const screens =
+  [...document.querySelectorAll(".screen")];
+
+const nextBtn =
+  document.getElementById("nextBtn");
+
+const backBtn =
+  document.getElementById("backBtn");
+
+const progressBar =
+  document.getElementById("progressBar");
+
+const stepText =
+  document.getElementById("stepText");
+
+/* ================= OPTIONS ================= */
+
+document.querySelectorAll(".option").forEach(option => {
+
+  option.addEventListener("click",() => {
+
+    const key =
+      option.dataset.key;
+
+    const value =
+      option.dataset.value;
+
+    document
+      .querySelectorAll(
+        `.option[data-key="${key}"]`
+      )
+      .forEach(item => {
+        item.classList.remove("selected");
+      });
+
+    option.classList.add("selected");
+
+    data[key] = value;
+
+    save();
+
+    updateButton();
+  });
+
+});
+
+/* ================= GOAL OPTIONS ================= */
+
+function buildGoalOptions(){
+
+  const box =
+    document.getElementById("goalOptions");
+
+  const title =
+    document.getElementById("goalQuestion");
+
+  const desc =
+    document.getElementById("goalDescription");
+
+  box.innerHTML = "";
+
+  let options = [];
+
+  if(data.goal === "Lose Fat"){
+
+    title.textContent =
+      "How quickly do you want to approach it?";
+
+    desc.textContent =
+      "A sustainable approach is generally easier to maintain.";
+
+    options = [
+      ["Slow & steady","Gradual progress with a sustainability focus."],
+      ["Moderate","Balanced approach to fat loss."],
+      ["I’m not sure","Let FITFORM use a conservative starting approach."]
+    ];
+
+  }else if(data.goal === "Build Muscle"){
+
+    title.textContent =
+      "What's your priority?";
+
+    desc.textContent =
+      "Your training and nutrition emphasis will follow this choice.";
+
+    options = [
+      ["Muscle growth","Prioritize hypertrophy and progressive training."],
+      ["Lean muscle","Focus on muscle with controlled weight gain."],
+      ["Muscle + strength","Combine size and performance."]
+    ];
+
+  }else if(data.goal === "Gain Weight"){
+
+    title.textContent =
+      "What kind of weight gain do you want?";
+
+    desc.textContent =
+      "We'll keep the starting approach practical and gradual.";
+
+    options = [
+      ["General weight gain","Increase overall body weight."],
+      ["Lean gain","Prioritize muscle and minimize unnecessary gain."]
+    ];
+
+  }else if(data.goal === "Get Stronger"){
+
+    title.textContent =
+      "What matters most?";
+
+    desc.textContent =
+      "Your training emphasis will reflect your preference.";
+
+    options = [
+      ["Overall strength","Build strength across major movements."],
+      ["Gym strength","Focus on resistance training."],
+      ["Athletic performance","Strength with conditioning and movement."]
+    ];
+
+  }else{
+
+    title.textContent =
+      "How do you want to improve?";
+
+    desc.textContent =
+      "Choose the area you'd most like your plan to support.";
+
+    options = [
+      ["Consistency","Build a routine I can maintain."],
+      ["Fitness","Improve general conditioning."],
+      ["Strength","Become stronger and more capable."]
+    ];
+  }
+
+  options.forEach(item => {
+
+    const button =
+      document.createElement("button");
+
+    button.className = "option";
+
+    button.dataset.key = "goalDetail";
+    button.dataset.value = item[0];
+
+    button.innerHTML = `
+      <div class="option-title">${item[0]}</div>
+      <div class="option-desc">${item[1]}</div>
+      <span class="check">✓</span>
+    `;
+
+    if(data.goalDetail === item[0]){
+      button.classList.add("selected");
+    }
+
+    button.onclick = () => {
+
+      box
+        .querySelectorAll(".option")
+        .forEach(x =>
+          x.classList.remove("selected")
+        );
+
+      button.classList.add("selected");
+
+      data.goalDetail =
+        item[0];
+
+      save();
+
+      updateButton();
+    };
+
+    box.appendChild(button);
+  });
+}
+
+/* ================= VALIDATION ================= */
+
+function validateCurrent(){
+
+  if(current === 0)
+    return true;
+
+  if(current === 1){
+
+    const value =
+      document.getElementById("name").value.trim();
+
+    if(!value){
+      alert("Please enter your name.");
+      return false;
+    }
+
+    data.name = value;
+  }
+
+  if(current === 2){
+
+    const age =
+      document.getElementById("age").value;
+
+    const gender =
+      document.getElementById("gender").value;
+
+    if(!age || age < 13 || age > 100){
+      alert("Enter a valid age.");
+      return false;
+    }
+
+    if(!gender){
+      alert("Please select your gender.");
+      return false;
+    }
+
+    data.age = age;
+    data.gender = gender;
+  }
+
+  if(current === 3){
+
+    const height =
+      document.getElementById("height").value;
+
+    const weight =
+      document.getElementById("weight").value;
+
+    if(!height || height < 100 || height > 230){
+      alert("Enter a valid height.");
+      return false;
+    }
+
+    if(!weight || weight < 30 || weight > 300){
+      alert("Enter a valid weight.");
+      return false;
+    }
+
+    data.height = height;
+    data.weight = weight;
+  }
+
+  if(current === 4 && !data.goal){
+    alert("Choose your main goal.");
+    return false;
+  }
+
+  if(current === 5 && !data.goalDetail){
+    alert("Choose an option.");
+    return false;
+  }
+
+  if(current === 6 && !data.activity){
+    alert("Choose your activity level.");
+    return false;
+  }
+
+  if(current === 7 && !data.trainingDays){
+    alert("Choose your training frequency.");
+    return false;
+  }
+
+  if(current === 8 && !data.location){
+    alert("Choose where you train.");
+    return false;
+  }
+
+  if(current === 9 && !data.experience){
+    alert("Choose your experience level.");
+    return false;
+  }
+
+  if(current === 10 && !data.diet){
+    alert("Choose your diet preference.");
+    return false;
+  }
+
+  if(current === 11 && !data.meals){
+    alert("Choose your preferred meal frequency.");
+    return false;
+  }
+
+  if(current === 12 && !data.sleep){
+    alert("Choose your typical sleep duration.");
+    return false;
+  }
+
+  save();
+
+  return true;
+}
+
+/* ================= NEXT ================= */
+
+function nextScreen(){
+
+  if(!validateCurrent())
+    return;
+
+  if(current === 4){
+    buildGoalOptions();
+  }
+
+  if(current < TOTAL_SCREENS - 1){
+
+    current++;
+
+    updateScreen();
+
+  }
+
+}
+
+/* ================= PREVIOUS ================= */
+
+function previousScreen(){
+
+  if(current <= 0)
+    return;
+
+  current--;
+
+  updateScreen();
+}
+
+/* ================= UPDATE SCREEN ================= */
+
+function updateScreen(){
+
+  screens.forEach((screen,index) => {
+
+    screen.classList.toggle(
+      "active",
+      index === current
+    );
+
+    screen.classList.remove("exit");
+  });
+
+  const percent =
+    current === 0
+      ? 0
+      : (current / (TOTAL_SCREENS - 1)) * 100;
+
+  progressBar.style.width =
+    percent + "%";
+
+  updateStep();
+  updateButton();
+
+  if(current === 13){
+    buildSummary();
+  }
+
+  window.scrollTo(0,0);
+}
+
+/* ================= STEP ================= */
+
+function updateStep(){
+
+  if(current === 0){
+    stepText.textContent =
+      "WELCOME";
+    return;
+  }
+
+  if(current === 13){
+    stepText.textContent =
+      "READY";
+    return;
+  }
+
+  stepText.textContent =
+    String(current).padStart(2,"0")
+    + " / "
+    + String(TOTAL_SCREENS - 2).padStart(2,"0");
+}
+
+/* ================= BUTTON ================= */
+
+function updateButton(){
+
+  if(current === 0){
+
+    nextBtn.textContent =
+      "GET STARTED";
+
+    backBtn.style.visibility =
+      "hidden";
+
+    return;
+  }
+
+  backBtn.style.visibility =
+    "visible";
+
+  if(current === TOTAL_SCREENS - 1){
+
+    nextBtn.textContent =
+      "OPEN MY PLAN";
+
+    return;
+  }
+
+  nextBtn.textContent =
+    "CONTINUE";
+}
+
+/* ================= SUMMARY ================= */
+
+function buildSummary(){
+
+  document.getElementById("summaryName").textContent =
+    data.name
+      ? `${data.name}'s starting plan`
+      : "Your starting plan";
+
+  document.getElementById("summaryGoal").textContent =
+    data.goal || "—";
+
+  document.getElementById("summaryWeight").textContent =
+    data.weight
+      ? data.weight + " kg"
+      : "—";
+
+  document.getElementById("summaryTraining").textContent =
+    data.trainingDays || "—";
+
+  document.getElementById("summaryLocation").textContent =
+    data.location || "—";
+
+  document.getElementById("summaryExperience").textContent =
+    data.experience || "—";
+
+  document.getElementById("summaryDiet").textContent =
+    data.diet || "—";
+}
+
+/* ================= SAVE ================= */
+
+function save(){
+
+  localStorage.setItem(
+    "fitform_profile",
+    JSON.stringify(data)
+  );
+}
+
+/* ================= RESTORE INPUTS ================= */
+
+function restoreInputs(){
+
+  if(data.name)
+    document.getElementById("name").value =
+      data.name;
+
+  if(data.age)
+    document.getElementById("age").value =
+      data.age;
+
+  if(data.gender)
+    document.getElementById("gender").value =
+      data.gender;
+
+  if(data.height)
+    document.getElementById("height").value =
+      data.height;
+
+  if(data.weight)
+    document.getElementById("weight").value =
+      data.weight;
+
+  document
+    .querySelectorAll(".option")
+    .forEach(option => {
+
+      const key =
+        option.dataset.key;
+
+      const value =
+        option.dataset.value;
+
+      if(data[key] === value){
+        option.classList.add("selected");
+      }
+
+    });
+}
+
+restoreInputs();
+updateScreen();
+
+/* ================= FINAL BUTTON ================= */
+
+nextBtn.addEventListener("click",function(){
+
+  if(current === TOTAL_SCREENS - 1){
+
+    save();
+
+    alert(
+      "Profile saved. Your personalized dashboard will be generated in the next version."
+    );
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
